@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     const scene = document.querySelector('a-scene');
     scene.addEventListener('loaded', function () {
@@ -7,22 +8,22 @@ document.addEventListener('DOMContentLoaded', function () {
         setupConfirmButton(); // Handle model confirmation
         setupCapturePositionButton(); // Handle position capture
         setupSavePositionButton(); // Handle position saving
+        setupDownloadDataButton(); // Handle data download
     });
 });
 
 let selectedModel = null; // Store the confirmed 3D model
 let modelPositions = {};  // Store the captured position for each model
+let places = staticLoadPlaces();  // Store original places (objects)
 
 function initializeMyApp() {
     console.log('Initializing the app...');
-    let places = staticLoadPlaces();
     console.log('Places loaded: ', places);
     renderPlaces(places);
 }
 
 // Step 1: Populate the dropdown with 3D model names
 function populateModelDropdown() {
-    let places = staticLoadPlaces(); // Load the places (3D models)
     let dropdown = document.getElementById('model-select');
 
     // Clear existing options
@@ -63,7 +64,6 @@ function setupCapturePositionButton() {
     const capturePositionButton = document.getElementById('capture-position-btn');
     capturePositionButton.addEventListener('click', function () {
         if (!selectedModel) {
-            // Display an error message in the position display text instead of using an alert
             document.getElementById('position-display').textContent = 'Please select a 3D model first.';
             return;
         }
@@ -90,7 +90,7 @@ function setupCapturePositionButton() {
     });
 }
 
-// Step 4: Save the position linked to the model without disabling the capture button
+// Step 4: Save the position linked to the model and update object data
 function setupSavePositionButton() {
     const savePositionButton = document.getElementById('save-position-btn');
     savePositionButton.addEventListener('click', function () {
@@ -99,12 +99,38 @@ function setupSavePositionButton() {
             return;
         }
 
-        console.log('Position saved for model:', selectedModel, modelPositions[selectedModel]);
+        const { latitude, longitude } = modelPositions[selectedModel];
+
+        // Update the lat/lng of the corresponding object in "places"
+        let modelObject = places.find(place => place.name === selectedModel);
+        if (modelObject) {
+            modelObject.location.lat = latitude;
+            modelObject.location.lng = longitude;
+            console.log(`Updated ${selectedModel} with new position: Latitude: ${latitude}, Longitude: ${longitude}`);
+        }
 
         const positionDisplay = document.getElementById('position-display');
         positionDisplay.textContent += ' (Position saved)';
 
         // Enable continuous capturing, so no buttons are disabled
+    });
+}
+
+// Step 5: Download the updated data as a JSON file
+function setupDownloadDataButton() {
+    const downloadButton = document.getElementById('download-data-btn');
+    downloadButton.addEventListener('click', function () {
+        const jsonData = JSON.stringify(places, null, 2); // Pretty-print JSON
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        // Create a temporary anchor to trigger the download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'model_positions.json';
+        a.click();
+
+        console.log('Data downloaded:', places);
     });
 }
 
