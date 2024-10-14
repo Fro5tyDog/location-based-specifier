@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
         setupConfirmButton(); // Handle model confirmation
         setupCapturePositionButton(); // Handle position capture
         setupSavePositionButton(); // Handle position saving
+        setupDistanceButtons();  // Handle min and max distance buttons
+        setupSaveMinMaxDistanceButton(); // Handle saving distance
         setupDownloadDataButton(); // Handle data download
         setupTestButton(); // Handle test button logic
     });
