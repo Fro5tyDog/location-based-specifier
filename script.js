@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
     const scene = document.querySelector('a-scene');
     scene.addEventListener('loaded', function () {
@@ -9,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setupCapturePositionButton(); // Handle position capture
         setupSavePositionButton(); // Handle position saving
         setupDownloadDataButton(); // Handle data download
+        setupTestButton(); // Handle test button logic
     });
 });
 
@@ -82,6 +82,9 @@ function setupCapturePositionButton() {
 
                 // Enable the "Save Position" button
                 document.getElementById('save-position-btn').disabled = false;
+
+                // Check if both Magnemite and Dragonite have positional data
+                checkTestButtonAvailability();
             } else {
                 document.getElementById('position-display').textContent = 'Unable to capture position. Please try again.';
                 console.error('Failed to capture position.');
@@ -112,7 +115,8 @@ function setupSavePositionButton() {
         const positionDisplay = document.getElementById('position-display');
         positionDisplay.textContent += ' (Position saved)';
 
-        // Enable continuous capturing, so no buttons are disabled
+        // Check again if both Magnemite and Dragonite have positional data
+        checkTestButtonAvailability();
     });
 }
 
@@ -131,6 +135,34 @@ function setupDownloadDataButton() {
         a.click();
 
         console.log('Data downloaded:', places);
+    });
+}
+
+// Step 6: Enable the Test button if positional data for both models is available
+function checkTestButtonAvailability() {
+    const testButton = document.getElementById('test-button');
+
+    // Check if both Magnemite and Dragonite have positional data
+    if (modelPositions['Magnemite'] && modelPositions['Dragonite']) {
+        testButton.disabled = false; // Enable the Test button
+        console.log('Test button enabled.');
+    }
+}
+
+// Step 7: Set up the Test button to recreate entities based on saved positional data
+function setupTestButton() {
+    const testButton = document.getElementById('test-button');
+    testButton.addEventListener('click', function () {
+        console.log('Running test...');
+
+        // Remove all existing <a-entity> elements
+        const entities = document.querySelectorAll('a-entity');
+        entities.forEach(entity => entity.parentNode.removeChild(entity));
+        console.log('All existing entities removed.');
+
+        // Recreate <a-entity> elements using the updated positional data
+        renderPlaces(places);
+        console.log('Entities recreated with updated positional data.');
     });
 }
 
