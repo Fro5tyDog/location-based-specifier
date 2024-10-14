@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     scene.addEventListener('loaded', function () {
         console.log('A-Frame scene fully initialized');
         initializeMyApp();
+        populateModelDropdown(); // Call the function to populate dropdown
     });
 });
 
@@ -11,6 +12,25 @@ function initializeMyApp() {
     let places = staticLoadPlaces();
     console.log('Places loaded: ', places);
     renderPlaces(places);
+}
+
+// Step 1: Populate the dropdown with 3D model names
+function populateModelDropdown() {
+    let places = staticLoadPlaces(); // Load the places (3D models)
+    let dropdown = document.getElementById('model-select');
+
+    // Clear existing options
+    dropdown.innerHTML = '';
+
+    // Add options to the dropdown
+    places.forEach((place) => {
+        let option = document.createElement('option');
+        option.value = place.name;
+        option.textContent = place.name;
+        dropdown.appendChild(option);
+    });
+
+    console.log('Dropdown populated with model names:', places.map(place => place.name));
 }
 
 function staticLoadPlaces() {
@@ -55,10 +75,10 @@ function renderPlaces(places) {
         model.setAttribute('gltf-model', `${filePath}`);
         model.setAttribute('rotation', '0 0 0');
         model.setAttribute('animation-mixer', '');
-        model.setAttribute('look-at', '[gps-camera]')
+        model.setAttribute('look-at', '[gps-camera]');
         model.setAttribute('scale', '0.15 0.15 0.15'); // Initial scale
         model.setAttribute('visible', 'false'); // Initially hidden
-        
+
         // Append the model to the scene
         scene.appendChild(model);
 
@@ -83,60 +103,4 @@ function renderPlaces(places) {
             });
         }, 1000); // Check every 1 second
     });
-}
-
-// Simulate getting the player's GPS position
-// function getPlayerPosition() {
-//     // You would replace this with actual GPS data in a real app
-//     console.log('Fetching player position...');
-//     return {
-//         latitude: 1.307, // Simulated player lat
-//         longitude: 103.850, // Simulated player lng
-//     };
-// }
-
-// Fetch the player's actual GPS position
-function getPlayerPosition(callback) {
-    if ("geolocation" in navigator) {
-        console.log('Fetching player position using GPS...');
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                console.log(`Player's current position: Latitude: ${latitude}, Longitude: ${longitude}`);
-                callback({ latitude, longitude });
-            },
-            (error) => {
-                console.error('Error retrieving player position', error);
-                callback(null); // Handle error (e.g., no permission or GPS unavailable)
-            },
-            {
-                enableHighAccuracy: true,
-                maximumAge: 10000, // Cache position for 10 seconds
-                timeout: 5000 // Wait up to 5 seconds for a response
-            }
-        );
-    } else {
-        console.error('Geolocation not available in this browser.');
-        callback(null); // Handle case when Geolocation is not supported
-    }
-}
-
-
-// Function to calculate distance between two GPS coordinates (in meters)
-function calculateDistance(lat1, lng1, lat2, lng2) {
-    console.log(`Calculating distance between (${lat1}, ${lng1}) and (${lat2}, ${lng2})`);
-    const R = 6371e3; // Earth radius in meters
-    const phi1 = lat1 * Math.PI / 180;
-    const phi2 = lat2 * Math.PI / 180;
-    const deltaPhi = (lat2 - lat1) * Math.PI / 180;
-    const deltaLambda = (lng2 - lng1) * Math.PI / 180;
-
-    const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
-              Math.cos(phi1) * Math.cos(phi2) *
-              Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distance = R * c; // Distance in meters
-    console.log(`Calculated distance: ${distance} meters`);
-    return distance;
 }
