@@ -265,16 +265,22 @@ function setupTestButton() {
         // Clear all intervals
         clearAllIntervals();
 
-        // Remove all existing <a-entity> elements
+        // Remove only model-related <a-entity> elements (avoid light entities)
         const entities = document.querySelectorAll('a-entity');
-        entities.forEach(entity => entity.parentNode.removeChild(entity));
-        console.log('All existing entities removed.');
+        entities.forEach(entity => {
+            // Only remove entities that have the 'gps-entity-place' or 'gltf-model' attributes
+            if (entity.hasAttribute('gps-entity-place') || entity.hasAttribute('gltf-model')) {
+                entity.parentNode.removeChild(entity);
+            }
+        });
+        console.log('Model-related entities removed.');
 
         // Recreate <a-entity> elements using the updated positional data
         renderPlaces(places);
         console.log('Entities recreated with updated positional data.');
     });
 }
+
 
 // function renderPlaces(places) {
 //     let scene = document.querySelector('a-scene');
