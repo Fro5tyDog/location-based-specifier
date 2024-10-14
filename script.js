@@ -195,13 +195,13 @@ function staticLoadPlaces() {
 function renderPlaces(places) {
     let scene = document.querySelector('a-scene');
     console.log('Rendering places...');
-    
+
     places.forEach((place) => {
         let latitude = place.location.lat;
         let longitude = place.location.lng;
         let filePath = place.filePath;
         let visibilityRange = place.visibilityRange;
-        
+
         console.log(`Creating model for: ${place.name} at (${latitude}, ${longitude}) with visibility range [${visibilityRange.min}m - ${visibilityRange.max}m]`);
 
         // Create a new entity for each place
@@ -213,6 +213,12 @@ function renderPlaces(places) {
         model.setAttribute('look-at', '[gps-camera]');
         model.setAttribute('scale', '0.15 0.15 0.15'); // Initial scale
         model.setAttribute('visible', 'false'); // Initially hidden
+
+        // Wait for the model to fully load before making it visible
+        model.addEventListener('model-loaded', () => {
+            console.log(`${place.name} model loaded, now visible.`);
+            model.setAttribute('visible', 'true');
+        });
 
         // Append the model to the scene
         scene.appendChild(model);
@@ -226,8 +232,8 @@ function renderPlaces(places) {
                     console.log(`Distance to ${place.name}: ${distance}m`);
 
                     if (distance > visibilityRange.min && distance < visibilityRange.max) {
-                        console.log(`${place.name} is within range, showing model.`);
-                        model.setAttribute('visible', 'true'); // Show the model
+                        console.log(`${place.name} is within range.`);
+                        // Keep the model visible, but ensure textures are loaded before setting visibility
                     } else {
                         console.log(`${place.name} is out of range, hiding model.`);
                         model.setAttribute('visible', 'false'); // Hide the model
@@ -242,6 +248,7 @@ function renderPlaces(places) {
         intervalHandles.push(intervalId);
     });
 }
+
 
 // Function to clear all intervals when removing entities
 function clearAllIntervals() {
