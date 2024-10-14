@@ -231,7 +231,7 @@ function setupSaveMinMaxDistanceButton() {
                 checkTestButtonAvailability();
             }
         }
-    });
+    });  
 }
 
 // Step 3: Update Logic to Check if All Data is Saved
