@@ -46,21 +46,34 @@ function populateModelDropdown() {
 }
 
 // Step 2: Handle the confirm model button
+// Update Position and Distance Display
 function setupConfirmButton() {
     const confirmButton = document.getElementById('confirm-model-btn');
     confirmButton.addEventListener('click', function () {
         const dropdown = document.getElementById('model-select');
-        selectedModel = dropdown.value; // Store the selected model
+        selectedModel = dropdown.value;
 
         console.log(`Model confirmed: ${selectedModel}`);
-        // Check if this model already has a captured position
+        let displayText = '';
+
+        // Display position data
         if (modelPositions[selectedModel]) {
             const { latitude, longitude } = modelPositions[selectedModel];
-            document.getElementById('position-display').textContent = 
-                `Previously saved position for ${selectedModel}: Latitude: ${latitude}, Longitude: ${longitude}`;
+            displayText += `Position for ${selectedModel}: Latitude: ${latitude}, Longitude: ${longitude}. `;
         } else {
-            document.getElementById('position-display').textContent = `No position saved for ${selectedModel} yet.`;
+            displayText += `No position saved for ${selectedModel}. `;
         }
+
+        // Display distance data
+        let modelObject = places.find(place => place.name === selectedModel);
+        if (modelObject) {
+            const { min, max } = modelObject.visibilityRange;
+            displayText += `Min Distance: ${min}m, Max Distance: ${max}m.`;
+        } else {
+            displayText += `No distance settings available for ${selectedModel}.`;
+        }
+
+        document.getElementById('position-display').textContent = displayText;
     });
 }
 
@@ -155,13 +168,14 @@ function setupDownloadDataButton() {
 // }
 
 // Step 1: Handle Distance Buttons
+// Handle Distance Buttons with Default Values
 function setupDistanceButtons() {
     const setMinDistanceButton = document.getElementById('set-min-distance-btn');
     const setMaxDistanceButton = document.getElementById('set-max-distance-btn');
 
     setMinDistanceButton.addEventListener('click', () => {
-        const minDistance = parseFloat(document.getElementById('min-distance').value);
-        if (selectedModel && !isNaN(minDistance)) {
+        const minDistance = parseFloat(document.getElementById('min-distance').value) || 10; // Default: 10m
+        if (selectedModel) {
             let modelObject = places.find(place => place.name === selectedModel);
             if (modelObject) {
                 modelObject.visibilityRange.min = minDistance;
@@ -172,8 +186,8 @@ function setupDistanceButtons() {
     });
 
     setMaxDistanceButton.addEventListener('click', () => {
-        const maxDistance = parseFloat(document.getElementById('max-distance').value);
-        if (selectedModel && !isNaN(maxDistance)) {
+        const maxDistance = parseFloat(document.getElementById('max-distance').value) || 100; // Default: 100m
+        if (selectedModel) {
             let modelObject = places.find(place => place.name === selectedModel);
             if (modelObject) {
                 modelObject.visibilityRange.max = maxDistance;
