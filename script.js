@@ -238,8 +238,12 @@ function setupSaveMinMaxDistanceButton() {
 function checkTestButtonAvailability() {
     const testButton = document.getElementById('test-button');
 
-    // Check if both Magnemite and Dragonite have positional data
-    if (modelPositions.length == places.length) {
+    // Check if all models have both position and distance data saved
+    let allModelsReady = places.every((place) => {
+        return modelPositions[place.name] && modelDistances[place.name];
+    });
+
+    if (allModelsReady) {
         testButton.disabled = false; // Enable the Test button
         console.log('Test button enabled.');
     }
