@@ -214,11 +214,12 @@ function renderPlaces(places) {
                     let distance = calculateDistance(playerPosition.latitude, playerPosition.longitude, latitude, longitude);
                     console.log(`Distance to ${place.name}: ${distance}m`);
 
+                    // Check if the player is within the visibility range
                     if (distance > visibilityRange.min && distance < visibilityRange.max) {
-                        console.log(`${place.name} is within range.`);
-                        // Keep the model visible, but ensure textures are loaded before setting visibility
+                        console.log(`${place.name} is within range, showing model.`);
+                        model.setAttribute('visible', 'true'); // Show the model
                     } else {
-                        console.log(`${place.name} is out of range, hiding model.`);
+                        console.log(`${place.name} is out of range or too close, hiding model.`);
                         model.setAttribute('visible', 'false'); // Hide the model
                     }
                 } else {
@@ -226,7 +227,7 @@ function renderPlaces(places) {
                 }
             });
         }, 1000); // Check every 1 second
-
+        
         // Store the interval handle so we can clear it later
         intervalHandles.push(intervalId);
     });
