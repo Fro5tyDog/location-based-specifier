@@ -6,11 +6,13 @@ document.addEventListener('DOMContentLoaded', function () {
         populateModelDropdown(); // Call the function to populate dropdown
         setupConfirmButton(); // Set up the confirm button functionality
         setupCapturePositionButton(); // Set up position capture button functionality
+        setupSavePositionButton(); // Set up save button functionality
     });
 });
 
 let selectedModel = null; // Global variable to store the confirmed 3D model
 let currentPosition = null; // Global variable to store the captured position
+let positionSaved = false;  // Global variable to track if the position has been saved
 
 function initializeMyApp() {
     console.log('Initializing the app...');
@@ -53,6 +55,11 @@ function setupConfirmButton() {
 function setupCapturePositionButton() {
     const capturePositionButton = document.getElementById('capture-position-btn');
     capturePositionButton.addEventListener('click', function () {
+        if (positionSaved) {
+            console.log('Position already saved. Capture disabled.');
+            return;
+        }
+
         console.log('Capturing position...');
         getPlayerPosition(function (position) {
             if (position) {
@@ -62,13 +69,39 @@ function setupCapturePositionButton() {
                 // Display the captured position in the position-display div
                 const positionDisplay = document.getElementById('position-display');
                 positionDisplay.textContent = `Position captured: Latitude: ${latitude}, Longitude: ${longitude}`;
+
                 console.log(`Position captured: Latitude: ${latitude}, Longitude: ${longitude}`);
+
+                // Enable the "Save Position" button
+                document.getElementById('save-position-btn').disabled = false;
             } else {
                 const positionDisplay = document.getElementById('position-display');
                 positionDisplay.textContent = 'Unable to capture position. Please try again.';
                 console.error('Failed to capture position.');
             }
         });
+    });
+}
+
+// Step 4: Set up the save position button functionality
+function setupSavePositionButton() {
+    const savePositionButton = document.getElementById('save-position-btn');
+    savePositionButton.addEventListener('click', function () {
+        if (currentPosition) {
+            positionSaved = true; // Lock the position
+
+            console.log('Position saved:', currentPosition);
+
+            // Disable further updates to the position
+            document.getElementById('capture-position-btn').disabled = true;
+            savePositionButton.disabled = true;
+
+            const positionDisplay = document.getElementById('position-display');
+            positionDisplay.textContent += ' (Position saved)';
+
+        } else {
+            console.log('No position captured to save.');
+        }
     });
 }
 
