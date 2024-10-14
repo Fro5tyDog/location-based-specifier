@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 let selectedModel = null; // Store the confirmed 3D model
 let modelPositions = {};  // Store the captured position for each model
+let modelDistances = {}; // New: Store distance settings
 let places = staticLoadPlaces();  // Store original places (objects)
 
 function initializeMyApp() {
@@ -141,11 +142,79 @@ function setupDownloadDataButton() {
 }
 
 // Step 6: Enable the Test button if positional data for both models is available
+// function checkTestButtonAvailability() {
+//     const testButton = document.getElementById('test-button');
+
+//     // Check if both Magnemite and Dragonite have positional data
+//     if (modelPositions['Magnemite'] && modelPositions['Dragonite']) {
+//         testButton.disabled = false; // Enable the Test button
+//         console.log('Test button enabled.');
+//     }
+// }
+
+// Step 1: Handle Distance Buttons
+function setupDistanceButtons() {
+    const setMinDistanceButton = document.getElementById('set-min-distance-btn');
+    const setMaxDistanceButton = document.getElementById('set-max-distance-btn');
+
+    setMinDistanceButton.addEventListener('click', () => {
+        const minDistance = parseFloat(document.getElementById('min-distance').value);
+        if (selectedModel && !isNaN(minDistance)) {
+            let modelObject = places.find(place => place.name === selectedModel);
+            if (modelObject) {
+                modelObject.visibilityRange.min = minDistance;
+                console.log(`Updated ${selectedModel} with min distance: ${minDistance}`);
+                document.getElementById('save-min-max-distance-btn').disabled = false;
+            }
+        }
+    });
+
+    setMaxDistanceButton.addEventListener('click', () => {
+        const maxDistance = parseFloat(document.getElementById('max-distance').value);
+        if (selectedModel && !isNaN(maxDistance)) {
+            let modelObject = places.find(place => place.name === selectedModel);
+            if (modelObject) {
+                modelObject.visibilityRange.max = maxDistance;
+                console.log(`Updated ${selectedModel} with max distance: ${maxDistance}`);
+                document.getElementById('save-min-max-distance-btn').disabled = false;
+            }
+        }
+    });
+}
+
+// Step 2: Handle Saving Min/Max Distance
+function setupSaveMinMaxDistanceButton() {
+    const saveMinMaxDistanceButton = document.getElementById('save-min-max-distance-btn');
+    saveMinMaxDistanceButton.addEventListener('click', function () {
+        if (selectedModel) {
+            let modelObject = places.find(place => place.name === selectedModel);
+            if (modelObject) {
+                modelDistances[selectedModel] = {
+                    min: modelObject.visibilityRange.min,
+                    max: modelObject.visibilityRange.max
+                };
+                console.log(`Min/Max distance saved for ${selectedModel}.`);
+
+                // Disable the save button after saving
+                saveMinMaxDistanceButton.disabled = true;
+
+                // Check if the test button should be enabled
+                checkTestButtonAvailability();
+            }
+        }
+    });
+}
+
+// Step 3: Update Logic to Check if All Data is Saved
 function checkTestButtonAvailability() {
     const testButton = document.getElementById('test-button');
 
-    // Check if both Magnemite and Dragonite have positional data
-    if (modelPositions['Magnemite'] && modelPositions['Dragonite']) {
+    // Check if all models have both position and distance data saved
+    let allModelsReady = places.every((place) => {
+        return modelPositions[place.name] && modelDistances[place.name];
+    });
+
+    if (allModelsReady) {
         testButton.disabled = false; // Enable the Test button
         console.log('Test button enabled.');
     }
