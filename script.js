@@ -283,7 +283,7 @@ function getPlayerPosition(callback) {
                 maximumAge: 10000, // Cache position for 10 seconds
                 timeout: 5000 // Wait up to 5 seconds for a response
             }
-        );
+        );  
     } else {
         console.error('Geolocation not available in this browser.');
         callback(null); // Handle case when Geolocation is not supported
