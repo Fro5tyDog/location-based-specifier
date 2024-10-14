@@ -14,7 +14,7 @@
 <script src="script.js"></script>
 
 <body style='margin: 0; overflow: hidden;'>  
-    <!-- Dropdown and buttons for model and position handling -->
+    <!-- Dropdown, buttons, and display area for position -->
     <div style="position: absolute; top: 10px; left: 10px; z-index: 999;">
         <label for="model-select">Choose a 3D model:</label>
         <select id="model-select">
@@ -23,6 +23,11 @@
         <button id="confirm-model-btn">Confirm Model</button>
         <br><br>
         <button id="capture-position-btn">Capture Position</button>
+        <br><br>
+        <!-- Div to display the captured position -->
+        <div id="position-display" style="font-size: 14px; color: #000;">
+            Position will be displayed here.
+        </div>
     </div>
 
     <a-scene

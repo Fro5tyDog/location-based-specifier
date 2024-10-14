@@ -59,11 +59,13 @@ function setupCapturePositionButton() {
                 currentPosition = position; // Store the captured position
                 const { latitude, longitude } = currentPosition;
 
-                // Show a popup with the captured position
-                alert(`Position captured: Latitude: ${latitude}, Longitude: ${longitude}`);
+                // Display the captured position in the position-display div
+                const positionDisplay = document.getElementById('position-display');
+                positionDisplay.textContent = `Position captured: Latitude: ${latitude}, Longitude: ${longitude}`;
                 console.log(`Position captured: Latitude: ${latitude}, Longitude: ${longitude}`);
             } else {
-                alert('Unable to capture position. Please try again.');
+                const positionDisplay = document.getElementById('position-display');
+                positionDisplay.textContent = 'Unable to capture position. Please try again.';
                 console.error('Failed to capture position.');
             }
         });
