@@ -63,7 +63,8 @@ function setupCapturePositionButton() {
     const capturePositionButton = document.getElementById('capture-position-btn');
     capturePositionButton.addEventListener('click', function () {
         if (!selectedModel) {
-            alert('Please select a 3D model first.');
+            // Display an error message in the position display text instead of using an alert
+            document.getElementById('position-display').textContent = 'Please select a 3D model first.';
             return;
         }
 
