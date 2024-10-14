@@ -240,7 +240,7 @@ function checkTestButtonAvailability() {
 
     // Check if all models have both position and distance data saved
     let allModelsReady = places.every((place) => {
-        return modelPositions[place.name] && modelDistances[place.name];
+        return modelPositions[place.name];
     });
 
     if (allModelsReady) {
