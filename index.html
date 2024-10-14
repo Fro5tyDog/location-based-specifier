@@ -14,12 +14,13 @@
 <script src="script.js"></script>
 
 <body style='margin: 0; overflow: hidden;'>  
-    <!-- Add a dropdown menu for 3D models -->
+    <!-- Dropdown and button for model selection -->
     <div style="position: absolute; top: 10px; left: 10px; z-index: 999;">
         <label for="model-select">Choose a 3D model:</label>
         <select id="model-select">
             <!-- Options will be dynamically loaded here -->
         </select>
+        <button id="confirm-model-btn">Confirm Model</button>
     </div>
 
     <a-scene

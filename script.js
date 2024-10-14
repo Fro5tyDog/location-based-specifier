@@ -4,8 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('A-Frame scene fully initialized');
         initializeMyApp();
         populateModelDropdown(); // Call the function to populate dropdown
+        setupConfirmButton(); // Set up the confirm button functionality
     });
 });
+
+let selectedModel = null; // Global variable to store the confirmed 3D model
 
 function initializeMyApp() {
     console.log('Initializing the app...');
@@ -31,6 +34,19 @@ function populateModelDropdown() {
     });
 
     console.log('Dropdown populated with model names:', places.map(place => place.name));
+}
+
+// Step 2: Set up the confirm button functionality
+function setupConfirmButton() {
+    const confirmButton = document.getElementById('confirm-model-btn');
+    confirmButton.addEventListener('click', function () {
+        const dropdown = document.getElementById('model-select');
+        selectedModel = dropdown.value; // Store the selected model
+
+        console.log(`Model confirmed: ${selectedModel}`);
+
+        // Future logic can be added here to use the confirmed model
+    });
 }
 
 function staticLoadPlaces() {
