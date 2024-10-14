@@ -5,10 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
         initializeMyApp();
         populateModelDropdown(); // Call the function to populate dropdown
         setupConfirmButton(); // Set up the confirm button functionality
+        setupCapturePositionButton(); // Set up position capture button functionality
     });
 });
 
 let selectedModel = null; // Global variable to store the confirmed 3D model
+let currentPosition = null; // Global variable to store the captured position
 
 function initializeMyApp() {
     console.log('Initializing the app...');
@@ -44,8 +46,27 @@ function setupConfirmButton() {
         selectedModel = dropdown.value; // Store the selected model
 
         console.log(`Model confirmed: ${selectedModel}`);
+    });
+}
 
-        // Future logic can be added here to use the confirmed model
+// Step 3: Set up the position capture button functionality
+function setupCapturePositionButton() {
+    const capturePositionButton = document.getElementById('capture-position-btn');
+    capturePositionButton.addEventListener('click', function () {
+        console.log('Capturing position...');
+        getPlayerPosition(function (position) {
+            if (position) {
+                currentPosition = position; // Store the captured position
+                const { latitude, longitude } = currentPosition;
+
+                // Show a popup with the captured position
+                alert(`Position captured: Latitude: ${latitude}, Longitude: ${longitude}`);
+                console.log(`Position captured: Latitude: ${latitude}, Longitude: ${longitude}`);
+            } else {
+                alert('Unable to capture position. Please try again.');
+                console.error('Failed to capture position.');
+            }
+        });
     });
 }
 
@@ -119,4 +140,30 @@ function renderPlaces(places) {
             });
         }, 1000); // Check every 1 second
     });
+}
+
+// Simulate fetching the player's GPS position (real GPS is handled in getPlayerPosition)
+function getPlayerPosition(callback) {
+    if ("geolocation" in navigator) {
+        console.log('Fetching player position using GPS...');
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                console.log(`Player's current position: Latitude: ${latitude}, Longitude: ${longitude}`);
+                callback({ latitude, longitude });
+            },
+            (error) => {
+                console.error('Error retrieving player position', error);
+                callback(null); // Handle error (e.g., no permission or GPS unavailable)
+            },
+            {
+                enableHighAccuracy: true,
+                maximumAge: 10000, // Cache position for 10 seconds
+                timeout: 5000 // Wait up to 5 seconds for a response
+            }
+        );
+    } else {
+        console.error('Geolocation not available in this browser.');
+        callback(null); // Handle case when Geolocation is not supported
+    }
 }
