@@ -151,23 +151,6 @@ function checkTestButtonAvailability() {
     }
 }
 
-// Step 7: Set up the Test button to recreate entities based on saved positional data
-// function setupTestButton() {
-//     const testButton = document.getElementById('test-button');
-//     testButton.addEventListener('click', function () {
-//         console.log('Running test...');
-
-//         // Remove all existing <a-entity> elements
-//         const entities = document.querySelectorAll('a-entity');
-//         entities.forEach(entity => entity.parentNode.removeChild(entity));
-//         console.log('All existing entities removed.');
-
-//         // Recreate <a-entity> elements using the updated positional data
-//         renderPlaces(places);
-//         console.log('Entities recreated with updated positional data.');
-//     });
-// }
-
 function staticLoadPlaces() {
     console.log('Loading static places...');
     return [
@@ -209,7 +192,7 @@ function renderPlaces(places) {
         model.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
         model.setAttribute('gltf-model', `${filePath}`);
         model.setAttribute('rotation', '0 0 0');
-        model.setAttribute('animation-mixer', '');
+        model.setAttribute('animation-mixer', 'clip: *; loop: repeat; timeScale: 1.1; clampWhenFinished: true; crossFadeDuration: 0.3');
         model.setAttribute('look-at', '[gps-camera]');
         model.setAttribute('scale', '0.15 0.15 0.15'); // Initial scale
         model.setAttribute('visible', 'false'); // Initially hidden
@@ -280,55 +263,6 @@ function setupTestButton() {
         console.log('Entities recreated with updated positional data.');
     });
 }
-
-
-// function renderPlaces(places) {
-//     let scene = document.querySelector('a-scene');
-//     console.log('Rendering places...');
-    
-//     places.forEach((place) => {
-//         let latitude = place.location.lat;
-//         let longitude = place.location.lng;
-//         let filePath = place.filePath;
-//         let visibilityRange = place.visibilityRange;
-        
-//         console.log(`Creating model for: ${place.name} at (${latitude}, ${longitude}) with visibility range [${visibilityRange.min}m - ${visibilityRange.max}m]`);
-
-//         // Create a new entity for each place
-//         let model = document.createElement('a-entity');
-//         model.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
-//         model.setAttribute('gltf-model', `${filePath}`);
-//         model.setAttribute('rotation', '0 0 0');
-//         model.setAttribute('animation-mixer', '');
-//         model.setAttribute('look-at', '[gps-camera]');
-//         model.setAttribute('scale', '0.15 0.15 0.15'); // Initial scale
-//         model.setAttribute('visible', 'false'); // Initially hidden
-
-//         // Append the model to the scene
-//         scene.appendChild(model);
-
-//         // Constantly check the player's distance and update visibility
-//         setInterval(() => {
-//             console.log('Checking player position...');
-//             getPlayerPosition((playerPosition) => {
-//                 if (playerPosition) {
-//                     let distance = calculateDistance(playerPosition.latitude, playerPosition.longitude, latitude, longitude);
-//                     console.log(`Distance to ${place.name}: ${distance}m`);
-
-//                     if (distance > visibilityRange.min && distance < visibilityRange.max) {
-//                         console.log(`${place.name} is within range, showing model.`);
-//                         model.setAttribute('visible', 'true'); // Show the model
-//                     } else {
-//                         console.log(`${place.name} is out of range, hiding model.`);
-//                         model.setAttribute('visible', 'false'); // Hide the model
-//                     }
-//                 } else {
-//                     console.error('Player position could not be retrieved.');
-//                 }
-//             });
-//         }, 1000); // Check every 1 second
-//     });
-// }
 
 // Simulate fetching the player's GPS position (real GPS is handled in getPlayerPosition)
 function getPlayerPosition(callback) {
