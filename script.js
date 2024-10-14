@@ -55,6 +55,7 @@ function setupConfirmButton() {
 
         console.log(`Model confirmed: ${selectedModel}`);
         let displayText = '';
+        let distanceText = '';
 
         // Display position data
         if (modelPositions[selectedModel]) {
@@ -68,12 +69,13 @@ function setupConfirmButton() {
         let modelObject = places.find(place => place.name === selectedModel);
         if (modelObject) {
             const { min, max } = modelObject.visibilityRange;
-            displayText += `Min Distance: ${min}m, Max Distance: ${max}m.`;
+            distanceText += `Min Distance: ${min}m, Max Distance: ${max}m.`;
         } else {
-            displayText += `No distance settings available for ${selectedModel}.`;
+            distanceText += `No distance settings available for ${selectedModel}.`;
         }
 
         document.getElementById('position-display').textContent = displayText;
+        document.getElementById('distance-display').textContent = distanceText;
     });
 }
 
@@ -83,6 +85,7 @@ function setupCapturePositionButton() {
     capturePositionButton.addEventListener('click', function () {
         if (!selectedModel) {
             document.getElementById('position-display').textContent = 'Please select a 3D model first.';
+            document.getElementById('distance-display').textContent = '';
             return;
         }
 
@@ -181,6 +184,9 @@ function setupDistanceButtons() {
                 modelObject.visibilityRange.min = minDistance;
                 console.log(`Updated ${selectedModel} with min distance: ${minDistance}`);
                 document.getElementById('save-min-max-distance-btn').disabled = false;
+                // Display the captured position in the position-display div
+                document.getElementById('distance-display').textContent = 
+                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;;
             }
         }
     });
@@ -193,6 +199,9 @@ function setupDistanceButtons() {
                 modelObject.visibilityRange.max = maxDistance;
                 console.log(`Updated ${selectedModel} with max distance: ${maxDistance}`);
                 document.getElementById('save-min-max-distance-btn').disabled = false;
+                // Display the captured position in the position-display div
+                document.getElementById('distance-display').textContent = 
+                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;;
             }
         }
     });
@@ -210,6 +219,10 @@ function setupSaveMinMaxDistanceButton() {
                     max: modelObject.visibilityRange.max
                 };
                 console.log(`Min/Max distance saved for ${selectedModel}.`);
+
+                // Display the captured position in the position-display div
+                document.getElementById('distance-display').textContent = 
+                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;;
 
                 // Disable the save button after saving
                 saveMinMaxDistanceButton.disabled = true;
