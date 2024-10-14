@@ -3,16 +3,15 @@ document.addEventListener('DOMContentLoaded', function () {
     scene.addEventListener('loaded', function () {
         console.log('A-Frame scene fully initialized');
         initializeMyApp();
-        populateModelDropdown(); // Call the function to populate dropdown
-        setupConfirmButton(); // Set up the confirm button functionality
-        setupCapturePositionButton(); // Set up position capture button functionality
-        setupSavePositionButton(); // Set up save button functionality
+        populateModelDropdown(); // Populate dropdown with models
+        setupConfirmButton(); // Handle model confirmation
+        setupCapturePositionButton(); // Handle position capture
+        setupSavePositionButton(); // Handle position saving
     });
 });
 
-let selectedModel = null; // Global variable to store the confirmed 3D model
-let currentPosition = null; // Global variable to store the captured position
-let positionSaved = false;  // Global variable to track if the position has been saved
+let selectedModel = null; // Store the confirmed 3D model
+let modelPositions = {};  // Store the captured position for each model
 
 function initializeMyApp() {
     console.log('Initializing the app...');
@@ -40,7 +39,7 @@ function populateModelDropdown() {
     console.log('Dropdown populated with model names:', places.map(place => place.name));
 }
 
-// Step 2: Set up the confirm button functionality
+// Step 2: Handle the confirm model button
 function setupConfirmButton() {
     const confirmButton = document.getElementById('confirm-model-btn');
     confirmButton.addEventListener('click', function () {
@@ -48,60 +47,63 @@ function setupConfirmButton() {
         selectedModel = dropdown.value; // Store the selected model
 
         console.log(`Model confirmed: ${selectedModel}`);
+        // Check if this model already has a captured position
+        if (modelPositions[selectedModel]) {
+            const { latitude, longitude } = modelPositions[selectedModel];
+            document.getElementById('position-display').textContent = 
+                `Previously saved position for ${selectedModel}: Latitude: ${latitude}, Longitude: ${longitude}`;
+        } else {
+            document.getElementById('position-display').textContent = `No position saved for ${selectedModel} yet.`;
+        }
     });
 }
 
-// Step 3: Set up the position capture button functionality
+// Step 3: Capture the position and associate it with the selected model
 function setupCapturePositionButton() {
     const capturePositionButton = document.getElementById('capture-position-btn');
     capturePositionButton.addEventListener('click', function () {
-        if (positionSaved) {
-            console.log('Position already saved. Capture disabled.');
+        if (!selectedModel) {
+            alert('Please select a 3D model first.');
             return;
         }
 
-        console.log('Capturing position...');
+        console.log('Capturing position for model:', selectedModel);
         getPlayerPosition(function (position) {
             if (position) {
-                currentPosition = position; // Store the captured position
-                const { latitude, longitude } = currentPosition;
+                modelPositions[selectedModel] = position; // Save the position linked to the model
+                const { latitude, longitude } = position;
 
                 // Display the captured position in the position-display div
-                const positionDisplay = document.getElementById('position-display');
-                positionDisplay.textContent = `Position captured: Latitude: ${latitude}, Longitude: ${longitude}`;
+                document.getElementById('position-display').textContent = 
+                    `Position captured for ${selectedModel}: Latitude: ${latitude}, Longitude: ${longitude}`;
 
-                console.log(`Position captured: Latitude: ${latitude}, Longitude: ${longitude}`);
+                console.log(`Position captured for ${selectedModel}: Latitude: ${latitude}, Longitude: ${longitude}`);
 
                 // Enable the "Save Position" button
                 document.getElementById('save-position-btn').disabled = false;
             } else {
-                const positionDisplay = document.getElementById('position-display');
-                positionDisplay.textContent = 'Unable to capture position. Please try again.';
+                document.getElementById('position-display').textContent = 'Unable to capture position. Please try again.';
                 console.error('Failed to capture position.');
             }
         });
     });
 }
 
-// Step 4: Set up the save position button functionality
+// Step 4: Save the position linked to the model without disabling the capture button
 function setupSavePositionButton() {
     const savePositionButton = document.getElementById('save-position-btn');
     savePositionButton.addEventListener('click', function () {
-        if (currentPosition) {
-            positionSaved = true; // Lock the position
-
-            console.log('Position saved:', currentPosition);
-
-            // Disable further updates to the position
-            document.getElementById('capture-position-btn').disabled = true;
-            savePositionButton.disabled = true;
-
-            const positionDisplay = document.getElementById('position-display');
-            positionDisplay.textContent += ' (Position saved)';
-
-        } else {
-            console.log('No position captured to save.');
+        if (!selectedModel || !modelPositions[selectedModel]) {
+            console.log('No position to save.');
+            return;
         }
+
+        console.log('Position saved for model:', selectedModel, modelPositions[selectedModel]);
+
+        const positionDisplay = document.getElementById('position-display');
+        positionDisplay.textContent += ' (Position saved)';
+
+        // Enable continuous capturing, so no buttons are disabled
     });
 }
 
