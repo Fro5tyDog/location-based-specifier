@@ -11,7 +11,7 @@ Working to gather the configuration details for the LTA Web Solutions applicatio
 __Can I use Google Maps to get location data?__<br>
 Yes you can, but I recommend you to not use it as it would be almost impossible to pin point locations, especially at areas with a significant amount of shelter. Moreover, this application will let you try the settings you specified on the spot so you need not have to constantly update your source code at the venue itself.
 
-## Installation (OPTIONAL)
+## Installation
 
 Download the files by [forking](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) the repository and using [github desktop](https://github.com/apps/desktop). 
 
