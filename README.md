@@ -1,6 +1,6 @@
 # Location-Based-Specifier
 
-This is a web application allows you to specify the location of your location-based AR models for the application, [LTA Web Solutions](https://github.com/Fro5tyDog/ConfigWebAR)
+This is a web application that allows you to specify the location of your location-based AR models for the application, [LTA Web Solutions](https://github.com/Fro5tyDog/ConfigWebAR)
 
 Do check out the official [documentation](https://docs.google.com/document/d/19cwEUnHil9duK8Ft2e--_a93_jggtFodaKbC-ouOoWY/edit?usp=sharing) for LTA Web Solutions
 
