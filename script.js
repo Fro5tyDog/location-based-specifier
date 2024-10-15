@@ -183,31 +183,36 @@ function setupDistanceButtons() {
             if (modelObject) {
                 modelObject.visibilityRange.min = minDistance;
                 console.log(`Updated ${selectedModel} with min distance: ${minDistance}`);
+
+                // Enable the "Save Min/Max Distance" button
                 document.getElementById('save-min-max-distance-btn').disabled = false;
-                // Display the captured position in the position-display div
+
+                // Update the display
                 document.getElementById('distance-display').textContent = 
-                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;;
+                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;
             }
         }
     });
 
     setMaxDistanceButton.addEventListener('click', () => {
-        const MaxDistance = parseFloat(document.getElementById('max-distance').value);
-        if (selectedModel && !isNaN(MaxDistance)) {
+        const maxDistance = parseFloat(document.getElementById('max-distance').value);
+        if (selectedModel && !isNaN(maxDistance)) {
             let modelObject = places.find(place => place.name === selectedModel);
             if (modelObject) {
                 modelObject.visibilityRange.max = maxDistance;
                 console.log(`Updated ${selectedModel} with max distance: ${maxDistance}`);
+
+                // Enable the "Save Min/Max Distance" button
                 document.getElementById('save-min-max-distance-btn').disabled = false;
-                // Display the captured position in the position-display div
+
+                // Update the display
                 document.getElementById('distance-display').textContent = 
-                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;;
+                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;
             }
         }
     });
 }
 
-// Step 2: Handle Saving Min/Max Distance
 function setupSaveMinMaxDistanceButton() {
     const saveMinMaxDistanceButton = document.getElementById('save-min-max-distance-btn');
     saveMinMaxDistanceButton.addEventListener('click', function () {
@@ -220,19 +225,20 @@ function setupSaveMinMaxDistanceButton() {
                 };
                 console.log(`Min/Max distance saved for ${selectedModel}.`);
 
-                // Display the captured position in the position-display div
+                // Update the display
                 document.getElementById('distance-display').textContent = 
-                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;;
+                    `Min Distance: ${modelObject.visibilityRange.min}m, Max Distance: ${modelObject.visibilityRange.max}m.`;
 
                 // Disable the save button after saving
                 saveMinMaxDistanceButton.disabled = true;
 
-                // Check if the test button should be enabled
+                // Check if all data is available to enable the test button
                 checkTestButtonAvailability();
             }
         }
-    });  
+    });
 }
+
 
 // Step 3: Update Logic to Check if All Data is Saved
 function checkTestButtonAvailability() {
