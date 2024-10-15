@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setupDownloadDataButton(); // Handle data download
         setupTestButton(); // Handle test button logic
     });
-});
+});  
 
 let selectedModel = null; // Store the confirmed 3D model
 let modelPositions = {};  // Store the captured position for each model
