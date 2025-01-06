@@ -33,7 +33,7 @@ function staticLoadPlaces() {
     return [
         {
             name: 'Magnemite',
-            filePath: './assets/magnemite/scene.gltf',
+            filePath: './assets/3D_Models/CableCar/CableCar_1.gltf',
             location: { 
                 lat: 1.3087085765187283,
                 lng: 103.85002403454892,
@@ -42,7 +42,7 @@ function staticLoadPlaces() {
         },
         {
             name: 'Dragonite',
-            filePath: './assets/dragonite/scene.gltf',
+            filePath: './assets/3D_Models/Gantry/Gantry.gltf',
             location: { 
                 lat: 1.306656407996899,
                 lng: 103.85012141436107,
