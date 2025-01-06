@@ -32,7 +32,7 @@ function staticLoadPlaces() {
     console.log('Loading static places...');
     return [
         {
-            name: 'Magnemite',
+            name: 'Cable Car',
             filePath: './assets/3D_Models/CableCar/CableCar_1.gltf',
             location: { 
                 lat: 1.3087085765187283,
@@ -41,7 +41,7 @@ function staticLoadPlaces() {
             visibilityRange: { min: 0, max: 100 }, // Appear when within 10-100m
         },
         {
-            name: 'Dragonite',
+            name: 'Gantry',
             filePath: './assets/3D_Models/Gantry/Gantry.gltf',
             location: { 
                 lat: 1.306656407996899,
